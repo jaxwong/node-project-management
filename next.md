@@ -38,4 +38,7 @@
 4. root(`app/layout.tsx`) layout.tsx styling applies to every page in the next app
 5. redux toolkit packages: react-redu, @reduxjs/toolkit, redux-persist, dotenv
 6. what is redux toolkit and how is it being used in `redux.tsx`? How is redux toolkit used in enterprise next.js in general?
-7. 
+7. next distinguishes between `.env.local` and `.env.production`
+8. "use client" is required wherever there is interaction in nextjs
+9. explain how the tailwindcss v4 directives work and interact with the nextapp in `globals.css`
+    - how does `Sidebar.tsx` work?
