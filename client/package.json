@@ -12,9 +12,11 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.5",
+    "@reduxjs/toolkit": "^2.11.0",
     "@tailwindcss/postcss": "^4.1.17",
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "lucide-react": "^0.555.0",
     "next": "16.0.6",
     "numeral": "^2.0.6",
@@ -23,7 +25,9 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "19.2.0",
+    "react-redux": "^9.2.0",
     "recharts": "^3.5.1",
+    "redux-persist": "^6.0.0",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
