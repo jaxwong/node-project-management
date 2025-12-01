@@ -1,9 +1,11 @@
 import React from 'react'
 
-const Searchbar = () => {
+const Sidebar = () => {
+
+  
   return (
-    <div>Searchbar</div>
+    <div>Sidebar</div>
   )
 }
 
-export default Searchbar;
+export default Sidebar;
