@@ -42,3 +42,4 @@
 8. "use client" is required wherever there is interaction in nextjs
 9. explain how the tailwindcss v4 directives work and interact with the nextapp in `globals.css`
     - how does `Sidebar.tsx` work?
+10. empty fragment vs div
