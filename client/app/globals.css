@@ -1,29 +1,37 @@
 @import "tailwindcss";
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* 1. CONFIG: Force Class-based Dark Mode 
+   This tells Tailwind v4 to apply 'dark:' styles when the .dark class 
+   is present on the HTML element, overriding the default media query behavior.
+*/
+@variant dark (&:where(.dark, .dark *));
+
+/* 2. THEME: Define Custom Colors 
+   In v4, we define theme extensions directly in CSS under @theme.
+   Mapping them to variables allows you to change values in :root easily.
+*/
+@theme {
+  --color-dark-bg: var(--dark-bg);
+  --color-dark-secondary: var(--dark-secondary);
+  --color-dark-tertiary: var(--dark-tertiary);
+  --color-blue-primary: var(--blue-primary);
+  --color-stroke-dark: var(--stroke-dark);
+  
+  /* Map standard grays if you want to override Tailwind defaults, 
+     otherwise Tailwind v4 includes these automatically. 
+     Below is how you map your custom vars to utility classes.
+  */
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-500: var(--gray-500);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
 }
 
-html,
-body,
-#root,
-.app {
-  height: 100%;
-  width: 100%;
-
-  /* @apply text-sm bg-gray-500 text-gray-900 */
-
-  font-size: 0.875rem;           /* text-sm */
-  background-color: #6b7280;     /* bg-gray-500 */
-  color: #111827;                /* text-gray-900 */
-}
-
-/* config(previously from tailwind.config.ts) */
-
+/* 3. VARIABLES: Set the actual values */
 :root {
-  /* grays */
+  /* Grays */
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
   --gray-300: #d1d5db;
@@ -31,34 +39,27 @@ body,
   --gray-700: #374151;
   --gray-800: #1f2937;
 
-  /* blues */
+  /* Blues */
   --blue-200: #93c5fd;
   --blue-400: #60a5fa;
   --blue-500: #3b82f6;
 
-  /* custom colors */
+  /* Custom Colors */
   --dark-bg: #101214;
   --dark-secondary: #1d1f21;
   --dark-tertiary: #3b3d40;
   --blue-primary: #0275ff;
   --stroke-dark: #2d3135;
-
-  /* built-ins */
+  
   --white: #ffffff;
 }
 
-/* Dark mode overrides */
-.dark {
-  --dark-bg: #101214;
-  --dark-secondary: #1d1f21;
-  --dark-tertiary: #3b3d40;
-  --stroke-dark: #2d3135;
+/* Base styles */
+html,
+body,
+#root,
+.app {
+  height: 100%;
+  width: 100%;
+  @apply text-sm; /* In v4, use @apply for simple composites if needed */
 }
-
-/* Background images */
-:root {
-  --gradient-radial: radial-gradient(var(--tw-gradient-stops));
-  --gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
-}
-
-
