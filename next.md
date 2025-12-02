@@ -29,6 +29,7 @@
     - Jest
     - type checking
     - linting and formatting etc
+    - frontend install: `
 
 2. Useful tailwind packages:
     - prettier-plugin-tailwindcss: for sorting classes in tailwind
@@ -43,3 +44,32 @@
 9. explain how the tailwindcss v4 directives work and interact with the nextapp in `globals.css`
     - how does `Sidebar.tsx` work?
 10. empty fragment vs div
+11. Template to create sidebars and navbars like in the tutorial
+12. postgres server vs database and best practices
+    - security
+    - roles and services
+13. `npm init -y` in the server: what is it doing?
+14. what does specifying `OutDir` in `tsconfig.json` do?
+15. what does `include` in `tsconfig.json` do?
+16. what does `seed` in package.json do? automatically run seed scripts? is this a keyword?
+    - what does `ts-node path_to_seed_script` do? 
+    - commonjs?
+17. What is Prisma and how does it work in this tutorial?
+    - init
+    - configure schema
+    - seed data
+    - generate
+    - migrate
+18. After any update to the schema, need to
+    - generate
+    - migrate again
+    - seed again(if you want but usually no and ONLY IN DEV, NEVER PROD)
+19. we use ESM over commonjs like in the tutorial for future-proofing
+    - refer to official prisma documentation for setting up prisma with postgres(1), and for seeding data using seed scripts(2)
+    - what we did:
+        - Changed package.json to be compatible with ESM, using the documentation in (1)
+        - changed prisma.config.ts to contain seed scripts instead of running in the package.json
+        - change schema.prisma according to docs in (1) and explicitly use `"moduleFormat"= "esm`
+        - update `prisma/seed.ts`
+
+
