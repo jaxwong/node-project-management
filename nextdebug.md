@@ -11,11 +11,13 @@
     - `npm i -D prettier prettier-plugin-tailwindcss tailwind-merge`
 5. .prettierrc: automatic class sorting
 6. Set up redux toolkit(in `redux.tsx`)
-7. For server:
+7. For server (prisma setup):
     - `npm init -y`
     - `npm i -D ts-node typescript @types/node`
     - `npx tsc --init`
     - configure `tsconfig.json`
+        - according to the offical prisma v7 with postgres docs
+        - `    "moduleResolution": "bundler"` instead of `node `which is more suitable for ESM 
     - `npm i prisma @prisma/client`
         - `npx prisma init` to initialize prisma and create prisma folder
             - generates `schema.prisma` where models live
@@ -35,6 +37,9 @@
         - `--name=init` merely names the folder to help you keep track of the purpose of each migration
     - `npx prisma db seed`: inserts data via Prisma client
         - `seed` is not a special name, you can name it anything you want in the `migrations` block in `prisma.config.ts`
+        - you can add a `"seed": "tsx prisma/seed.ts` in package.json and run `npm run seed` if you prefer, works the same 
+8. `npm i express body-parser cors dotenv helmet morgan`
+9. `npm i -D rimraf concurrently nodemon @types/cors @types/express @types/morgan @types/node`
 
 ### Debug
 
@@ -49,6 +54,9 @@
     - `git commit -m "remove submodule ref completely`
     - `git push`
     - then create the next app in your root folder(with `--no-git`) and add again
+3. Change CJS to ESM for future-proofing
+    - ref to above setup
+    - change all cjs commands to be esm-friendly
 
 
 
