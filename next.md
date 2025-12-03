@@ -111,4 +111,21 @@
     - Create `controllers` and `routes` folders. `controllers` is for the **route handler functions** that will be executed when an endpoint is hit, while `routes` specifies the routes that are available to be reached for a specific url
     - routes merely connect paths to controller functions, all business logic and talking to db is done in controllers
 29. Default exports can be renamed anything. So even though `export default router`, in `src/index.ts` you can `import projectRoutes ..` where `projectRoutes` refers to the router object that handles the project routes
+30. `src/index.ts` global middleware config:
+    - `dotenv.config()`: loads env vars from `.env` into `process.env` so e.g. `DATABASE_URL` in `.env` becomes usable as `process.env.DATABASE_URL` 
+    - `const app = express()` creates the Express app instance which receives requests and sends responses
+    - `app.use(express.json)` enables Express' built-in JSON body parser: you can access JSON requests/responses with `req.body` or `res,body`
+    - `app.use(helmet)` uses helmet security middleware which sets many HTTP headers that prevent XSS attacks, clickjacking, MIME sniffing etc
+    - `app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))` configures a specific helmet policy called Cross-Origin Resource policy(CORP) which allows images, media etc to be loaded by other origins(CDN, frontends)
+        - useful when frontend and backend are on different domains
+    - `app.use(morgan("common"))` logs each request in your terminal 
+        ```bash
+        GET /projects 200 12ms
+        POST /login 401 8ms
+        ```
+    - `app.use(bodyParser.urlencoded({ extended: false }))` parses form data so that it can be accessed via `req.body`
+    - `app.use(cors)` allows frontend to call your backend API even if they run on different ports or domains. Without CORS, the browser will block the request
+        - frontend: localhost:3000
+        - backend: localhost:8000
+
 
