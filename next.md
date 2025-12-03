@@ -142,4 +142,78 @@
     - the url should also not contain data that should be in the body
     - route path defines WHAT you are updating, while the body defines the new value
         - so POST and PATCH data should ALWAYS be in the body, never the URL!
+33. RTK Query
+    ```ts
+    export const api = createApi({
+        baseQuery: fetchBaseQuery({
+            baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL
+        }),
+        reducerPath: "api",
+        tagTypes: ["Projects", "Tasks"],
+        endpoints: (build) => ({
+            ...
+        })
+    })
+    ```
+    - `baseQuery`: defines how to make network requests. `fetchBaseQuery` is a `wrapper` around `fetch` with the base URL included. 
+        - so `query: () => "projects"` becomes `GET http://localhost:8000/projects`
+    - `reducerPath: "api"` : defines a slice inside Redux state called `state.api`
+        - this means all the data, cache, request statuses, errors and other relevant information pertaining to your API interactions will be stored under `state.api` in RTK Query
+    - `tagTypes: ["Projects", "Tasks"]`: tags are used for caching + auto-refetch
+        - invalidating a project/tasks tag means you refetch all the projects/tags
+    - `endpoints` defines queries(`GET`) and mutations(`POST, PATCH, DELETE`)
+        - RTK Query generates custom React hooks for each endpoint
+    ```ts
+    getProjects: build.query<Project[], void>({
+        query: () => "projects",
+        providesTags: ["Projects"]
+    })
+    ```
+    - makes a GET request to `/projects`
+    - returns a `Project[]`
+    - caches the result under tag "Projects"
+    - Generates a hook `useGetProjectsQuery()`
+    - the first generic parameter is the return type, the second generic parameter is the input type
+    - `providesTags: ["Projects"]` means that the query returns data associated with the tag `"Projects"`
+        - Hence when mutations invalidate tags, then RTK Query automatically finds all queries with matching tags and refetches 
+    ```ts
+    createProject: build.mutation<Project, Partial<Project>>({
+        query: (project) => ({
+            url: "projects",
+            method: "POST",
+            body: project,
+        }),
+        invalidatesTags: ["Projects"]
+    })
+    ```
+    - after success, invalidate `"Projects"` tag(refetch)
+    - this keeps UI in sync without manual refetch required
+    ```ts
+    getTasks: build.query<Task[], { projectId: number }>({
+        query: ({ projectId }) => `tasks?projectId=${projectId}`,
+        providesTags: (result) =>
+            result
+            ? result.map(({ id }) => ({ type: "Tasks", id }))
+            : [{ type: "Tasks" }]
+    })
+    ```
+    - result is the data returned from the query(`Task[]`). it is not a special name and can be named anything
+    - the function in providesTags means that you cache each task individually with their id, which allows you to invalidate a single task later
+    ```ts
+    updateTaskStatus: build.mutation<Task, { taskId; status }>({
+        query: ({ taskId, status }) => ({
+            url: `tasks/${taskId}/status`,
+            method: "PATCH",
+            body: { status },
+        }),
+        invalidatesTags: (result, error, { taskId }) => [
+            { type: "Tasks", id: taskId }
+        ]
+    })
+    ```
+    - after success, invalidate only the changed task
+    - we use destructuring in the `query` here because what is passed in as input argument(as seen in 2nd argument) is a object with specific fields that we want to reference
+    - all endpoints are turned into React hooks which you can then call. query hooks just return the data, while mutation hooks gives you the mutation function that you can call in components
+
+
 
