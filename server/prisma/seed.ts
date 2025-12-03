@@ -1,61 +1,66 @@
-import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma-client/client";
+import { prisma } from "./prisma";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const connectionString = process.env.DATABASE_URL!;
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
-
 // Get __dirname equivalent in ESM
-const __filename = fileURLToPath(import.meta.url); // gives us the url of seed.ts
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function deleteAllData(orderedFileNames: string[]) {
-  const modelNames = orderedFileNames.map((fileName) => {
-    const modelName = path.basename(fileName, path.extname(fileName));
-    return modelName.charAt(0).toUpperCase() + modelName.slice(1);
-  });
+async function deleteAllData() {
+  await prisma.$executeRawUnsafe(`
+    TRUNCATE TABLE 
+      "TaskAssignment",
+      "Comment",
+      "Attachment",
+      "Task",
+      "ProjectTeam",
+      "Project",
+      "User",
+      "Team"
+    RESTART IDENTITY CASCADE;
+  `);
 
-  for (const modelName of modelNames) {
-    const model: any = prisma[modelName as keyof typeof prisma];
-    if (model && typeof model.deleteMany === 'function') {
-      try {
-        await model.deleteMany({});
-        console.log(`Cleared data from ${modelName}`);
-      } catch (error) {
-        console.error(`Error clearing data from ${modelName}:`, error);
-      }
-    }
-  }
+  console.log("✓ All tables truncated and IDs reset");
 }
+
 
 async function main() {
   const dataDirectory = path.join(__dirname, "seedData");
 
-  const orderedFileNames = [
+  // Seed in order of dependencies (parents first, children last)
+  const seedOrder = [
     "team.json",
+    "user.json",
     "project.json",
     "projectTeam.json",
-    "user.json",
     "task.json",
     "attachment.json",
     "comment.json",
     "taskAssignment.json",
   ];
 
-  await deleteAllData(orderedFileNames);
+  console.log("🗑️  Deleting existing data...\n");
+  await deleteAllData();
 
-  for (const fileName of orderedFileNames) {
+  console.log("\n🌱 Seeding database...\n");
+
+  for (const fileName of seedOrder) {
     const filePath = path.join(dataDirectory, fileName);
+    
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      console.warn(`⚠ File not found: ${fileName}`);
+      continue;
+    }
+
     const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
     const modelName = path.basename(fileName, path.extname(fileName));
-    const model: any = prisma[modelName as keyof typeof prisma];
+    const capitalizedModelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
+    const model: any = prisma[capitalizedModelName as keyof typeof prisma];
 
     if (!model || typeof model.create !== 'function') {
-      console.error(`Model ${modelName} not found in Prisma Client`);
+      console.error(`✗ Model ${capitalizedModelName} not found in Prisma Client`);
       continue;
     }
 
@@ -63,16 +68,22 @@ async function main() {
       for (const data of jsonData) {
         await model.create({ data });
       }
-      console.log(`Seeded ${modelName} with data from ${fileName}`);
-    } catch (error) {
-      console.error(`Error seeding data for ${modelName}:`, error);
+      console.log(`✓ Seeded ${capitalizedModelName} with ${jsonData.length} records from ${fileName}`);
+    } catch (error: any) {
+      console.error(`✗ Error seeding data for ${capitalizedModelName}:`, error.message);
+      // Log the first record that failed for debugging
+      if (jsonData.length > 0) {
+        console.error(`  First record:`, JSON.stringify(jsonData[0], null, 2));
+      }
     }
   }
+
+  console.log("\n✅ Seeding completed!");
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error("❌ Seeding failed:", e);
     process.exit(1);
   })
   .finally(async () => {

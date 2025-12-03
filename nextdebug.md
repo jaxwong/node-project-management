@@ -57,6 +57,9 @@
 3. Change CJS to ESM for future-proofing
     - ref to above setup
     - change all cjs commands to be esm-friendly
+4. In the seed script, you need to use TRUNCATE to delete the data so that autoincremented IDs are reset
+    - you also need to delete the tables in order so that foreign key relations are preserved. This means deleting the child tables(those that reference parent tables in their fks) before parent tables
+    - this means during insertion, to also insert the parent tables first before child tables
 
 
 
