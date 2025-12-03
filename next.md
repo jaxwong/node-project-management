@@ -127,5 +127,19 @@
     - `app.use(cors)` allows frontend to call your backend API even if they run on different ports or domains. Without CORS, the browser will block the request
         - frontend: localhost:3000
         - backend: localhost:8000
-
+31. `req.params` vs `req.query`
+    - `req.params` comes from route params embedded directly in the url path e.g. `GET /users/123`
+        - `req.params.id` will be 123 for `app.get('/users/:id)`
+        - e.g. `projects/:projectId/tasks/:taskId`
+        - use for resources normally identified by an ID
+        - always strings, typically required values, must match the route pattern to hit the route
+        - in Express, only segments with `:` are dynamic route parameters (become `req.params`)
+    - `req.query` comes from query string after the `?` in the url e.g. `GET /search?query=apple&page=3&limit=10`
+        - `req.query.query` gives apple and `req.query.page` gives 3
+        - use for optional filters, sorting & pagination, search parameters, anything non-essential to route-matching
+        - key-value pairs, arbitrary number of query params allowed
+32. we do `router.patch("/:taskId/status", updateTaskStatus)` instead of `router.patch("/tasks/22?status=Completed", updateTaskStatus)` because the latter uses query params which are not ideal for updating
+    - the url should also not contain data that should be in the body
+    - route path defines WHAT you are updating, while the body defines the new value
+        - so POST and PATCH data should ALWAYS be in the body, never the URL!
 
