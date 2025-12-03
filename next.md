@@ -93,4 +93,22 @@
     - `tsx watch src/index.ts` runs the ts directly, auto-reloads when files change, no build step and allows ESM with no config
         - different from `node dist/index.js` as this doesnt reload on changes and is usually used in prod only
     - `tsx prisma/seed.ts` just runs the seed script to seed the postgres db locally
+26. `export { prisma }` gives you a singleton
+    - in Node.js ESM, every module is executed once and exports are cached by Node
+    - Prisma docs expect a singleton across the entire app
+27. In controller functions:
+    - `req` and `res` are parameters to the function, and Express provides the arguments and calls it for us when you register the route using `app.get(route, functionToExecuteWhenHittingRoute)`
+    - basically, the function is a route handler
+28. Express backend flow. Inside server/src:
+    - `src/index.ts`: the entrypoint to the backend. 
+        - creates the Express app
+        - configure global middleware(JSON parser, CORS, logging etc)
+        - connect to db (if needed)
+        - mount all routers (`app.use(...)`)
+            - e.g. `app.use("/projects", projectRoutes)` helps to mount project routes
+            - each `app.use` is like creating a folder of a specific type of routes that are available in the app
+        - start HTTP server (`app.listen(...)`)
+    - Create `controllers` and `routes` folders. `controllers` is for the **route handler functions** that will be executed when an endpoint is hit, while `routes` specifies the routes that are available to be reached for a specific url
+    - routes merely connect paths to controller functions, all business logic and talking to db is done in controllers
+29. Default exports can be renamed anything. So even though `export default router`, in `src/index.ts` you can `import projectRoutes ..` where `projectRoutes` refers to the router object that handles the project routes
 
