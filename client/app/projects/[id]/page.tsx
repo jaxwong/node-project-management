@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import ProjectHeader from '../ProjectHeader'
 import BoardView from '../BoardView';
+import ListView from '../ListView';
 import { useParams } from 'next/navigation';
 
 // type Props = {
@@ -22,6 +23,9 @@ const Project = () => {
         />
         { activeTab === "Board" && (
             <BoardView id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
+        )}
+        { activeTab === "List" && (
+            <ListView id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
         )}
     </div>
   )
