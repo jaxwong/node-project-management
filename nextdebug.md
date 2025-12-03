@@ -61,6 +61,7 @@
     - you also need to delete the tables in order so that foreign key relations are preserved. This means deleting the child tables(those that reference parent tables in their fks) before parent tables
     - this means during insertion, to also insert the parent tables first before child tables
 5. In the seed data, you shouldn't manually specify the IDs as the IDs are set to autoincrement in postgres, and you would have to manually reset the IDs afterwards for each table that you want to insert into
+6. Next.js only looks for the `.env` file inside the directory where `package.json` for frontend lives! So `.env.local` should be in `client`, not outside!
 
 
 

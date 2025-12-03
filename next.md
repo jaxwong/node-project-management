@@ -214,6 +214,7 @@
     - after success, invalidate only the changed task
     - we use destructuring in the `query` here because what is passed in as input argument(as seen in 2nd argument) is a object with specific fields that we want to reference
     - all endpoints are turned into React hooks which you can then call. query hooks just return the data, while mutation hooks gives you the mutation function that you can call in components
+34. href in `Sidebar/index.tsx`  is a Next.js page route, not an API call to your backend!
 
 
 
