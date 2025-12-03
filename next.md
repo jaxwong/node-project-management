@@ -215,6 +215,15 @@
     - we use destructuring in the `query` here because what is passed in as input argument(as seen in 2nd argument) is a object with specific fields that we want to reference
     - all endpoints are turned into React hooks which you can then call. query hooks just return the data, while mutation hooks gives you the mutation function that you can call in components
 34. href in `Sidebar/index.tsx`  is a Next.js page route, not an API call to your backend!
+35. type assertions uses in typescript
+    - e.g. `as string`
+36. Next.js `public` folder in the root of the Next.js app is special. Any file in public is served statically at the root of your sites.
+    - `public/i2.jpg` is accessible via URL `/i2.jpg`
+    - you do not need to import it ot reference the file system path in your code
+    - when you run your app with `npm run dev`, Next.js automatically sets up a static server for all files in `public`:
+        - For `<Image src="/i2.jpg" width={400} height={200} alt="Nav Algorithm" />`, Next.js looks in `public/i2.jpg` and serves it.
+        - the leading slash `/` tells Next.js its relative to the site root, not your server code folder
+
 
 
 

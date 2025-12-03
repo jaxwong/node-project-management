@@ -62,6 +62,11 @@
     - this means during insertion, to also insert the parent tables first before child tables
 5. In the seed data, you shouldn't manually specify the IDs as the IDs are set to autoincrement in postgres, and you would have to manually reset the IDs afterwards for each table that you want to insert into
 6. Next.js only looks for the `.env` file inside the directory where `package.json` for frontend lives! So `.env.local` should be in `client`, not outside!
+7. Next.js v15+ states that params passed to a page are asynchronous(Promises). Hence in your page, to get the params you should do:
+```ts
+const params = useParams();
+const id = params.id as string;
+```
 
 
 

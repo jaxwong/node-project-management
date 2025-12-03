@@ -18,4 +18,64 @@
 5. Everything in Prisma is strongly typed
     - can't insert invalid fields
     - the return tyoe of every Prisma call is inferred automatically
+6. In Prisma, each model typically has 2 kinds of fields:
+    - Database fields: actually stored in the Postgres table
+    - Relation fields: these are virtual fields in Prisma and do not exist in Postgres as columns. They allow you to navigate data easily
+    ```prisma
+    model Task {
+    id             Int       @id @default(autoincrement())
+    title          String
+    description    String?
+    status         String?
+    priority       String?
+    tags           String?
+    startDate      DateTime?
+    dueDate        DateTime?
+    points         Int?
+    projectId      Int
+    authorUserId   Int
+    assignedUserId Int?
+
+    project         Project          @relation(fields: [projectId], references: [id])
+    author          User             @relation("TaskAuthor", fields: [authorUserId], references: [userId])
+    assignee        User?            @relation("TaskAssignee", fields: [assignedUserId], references: [userId])
+    taskAssignments TaskAssignment[]
+    attachments     Attachment[]
+    comments        Comment[]
+    }
+    ```
+    - `@relation(fields: [...], references: [...])`: tells Prisma that the field is a foreign key. WHen querying, this relation links to another table's primary key
+    - `attachments Attachment[]` in `Task`: a **back relation** that tells Prisma that a Task can have multiple attachments(one-to-many) relation
+    - Prisma automatically generates queries so you can fetch a Task with its attachments. But how does Prisma know which attachments connect to which Task?
+        ```prisma
+        model Attachment {
+        id           Int     @id @default(autoincrement())
+        fileURL      String
+        fileName     String?
+        taskId       Int
+        uploadedById Int
+
+        task       Task @relation(fields: [taskId], references: [id])
+        uploadedBy User @relation(fields: [uploadedById], references: [userId])
+        }
+        ```
+        - as seen in the model for Attachment, there is a FK relationship to tell Prisma that Attachment.taskId corresponds to Task.id
+        - Task.attachments is implicit in Prisma: even though Postgres has only the Task fields in the db, Prisma fetches related rows from Attachment and populates Task.attachments **virtually**
+7. All 1-n relationships are defined the same way: 
+    - the n side contains a foreign key and a `@relation` pointing to the 1 side
+    - the 1 side contains an array field of the "many" type
+    - when you use Prisma like below:
+    ```ts
+    const task = await prisma.task.findUnique({
+    where: { id: 1 },
+    include: { attachments: true }
+    });
+    ```
+    ```sql
+    SELECT * FROM "Task" t
+    LEFT JOIN "Attachment" a ON a.taskId = t.id
+    WHERE t.id = 1;
+    ```
+    - so your task object contains the attachments as well
+
     
