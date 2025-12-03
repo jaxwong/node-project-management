@@ -61,8 +61,6 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
         </div>
         </div>
     </div>
-
-    
   )
 }
 
@@ -88,7 +86,5 @@ const TabButton = ({ name, icon, setActiveTab, activeTab }: TabButtonProps) => {
     </button>
   );
 };
-
-
 
 export default ProjectHeader

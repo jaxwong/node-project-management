@@ -5,6 +5,7 @@ import ProjectHeader from '../ProjectHeader'
 import BoardView from '../BoardView';
 import ListView from '../ListView';
 import { useParams } from 'next/navigation';
+import TimelineView from '../TimelineView';
 
 // type Props = {
 //     params: { id: string };
@@ -27,6 +28,9 @@ const Project = () => {
         { activeTab === "List" && (
             <ListView id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
         )}
+        {activeTab === "Timeline" && (
+            <TimelineView id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
+      )}
     </div>
   )
 }
