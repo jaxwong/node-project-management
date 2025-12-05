@@ -67,6 +67,10 @@
 const params = useParams();
 const id = params.id as string;
 ```
+8. When trying to restart the project afresh(freshly pulled from github), remember to 
+    - set up postgres
+    - generate prisma and migrate
+    - set up env variables in both client and server 
 
 
 

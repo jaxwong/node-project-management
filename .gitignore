@@ -1,2 +1,12 @@
 client/node_modules
+server/node_modules
+client/.env.local
+server/.env
+client/dist/
+server/dist/
+client/.next/
+client/next-env.d.ts
+.DS_Store
+.vscode
+
 
