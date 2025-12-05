@@ -7,6 +7,7 @@ import ListView from '../ListView';
 import { useParams } from 'next/navigation';
 import TimelineView from '../TimelineView';
 import TableView from '../TableView';
+import ModalNewTask from '@/components/ModalNewTask';
 
 // type Props = {
 //     params: { id: string };
@@ -19,6 +20,11 @@ const Project = () => {
     const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
   return (
     <div>
+        <ModalNewTask
+            isOpen={isModalNewTaskOpen}
+            onClose={() => setIsModalNewTaskOpen(false)}
+            id={id}
+        />
         <ProjectHeader 
             activeTab={activeTab}
             setActiveTab={setActiveTab}
