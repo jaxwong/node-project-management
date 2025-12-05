@@ -223,6 +223,18 @@
     - when you run your app with `npm run dev`, Next.js automatically sets up a static server for all files in `public`:
         - For `<Image src="/i2.jpg" width={400} height={200} alt="Nav Algorithm" />`, Next.js looks in `public/i2.jpg` and serves it.
         - the leading slash `/` tells Next.js its relative to the site root, not your server code folder
+37. It is the safer and cleaner choice to define 
+    ```ts
+    router.get("/user/:userId", getUserTasks);
+    // rather than
+    router.get("/:userId", getUserTasks);
+    ```
+    - if you define a generic wildcard route like `/:userId`, it will swallow any other route that comes after it that matches that pattern
+    - basically, no other route can ever be reached if you define a wildcard at the first level like this
+    - hence we use a prefix(namespace) like `/user/` to avoid this entirely
+    - further, REST endpoints shouldb be intuitive. 
+        - `GET /tasks/15` implies "Fetch the unique Task with ID 15
+        - `GET /tasks/user/15` implies "Fetch all tasks belonging to User 15"
 
 
 
